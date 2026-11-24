@@ -1,0 +1,2 @@
+<script>window.LMS={baseUrl:<?= json_encode(url()) ?>,csrf:<?= json_encode(csrf_token()) ?>};</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script><script src="<?= e(url('assets/js/app.js')) ?>"></script></body></html>

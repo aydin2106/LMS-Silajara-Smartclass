@@ -1,0 +1,11 @@
+<?php require __DIR__.'/../_dashboard_start.php';
+$counts=[]; foreach(['siswa','guru'] as $r){$s=$pdo->prepare('SELECT COUNT(*) FROM users WHERE role=?');$s->execute([$r]);$counts[$r]=(int)$s->fetchColumn();}
+$counts['modul']=(int)$pdo->query('SELECT COUNT(*) FROM modules')->fetchColumn(); $counts['tugas']=(int)$pdo->query('SELECT COUNT(*) FROM tasks')->fetchColumn();
+$recent=$pdo->query('SELECT name,role,created_at FROM users ORDER BY id DESC LIMIT 6')->fetchAll();
+?>
+<div class="page-heading"><div><span class="eyebrow">OVERVIEW ADMINISTRATOR</span><h1>Dashboard Admin</h1><p>Ringkasan data dan aktivitas LMS ASJ.</p></div><a class="btn btn-primary" href="<?= e(url('users')) ?>"><i class="fa-solid fa-user-plus"></i> Kelola Pengguna</a></div>
+<div class="stats-grid">
+<?php foreach([['Total Siswa',$counts['siswa'],'fa-users','blue'],['Total Guru',$counts['guru'],'fa-graduation-cap','green'],['Total Modul',$counts['modul'],'fa-book-open','purple'],['Total Tugas',$counts['tugas'],'fa-clipboard-list','orange']] as [$label,$value,$icon,$color]): ?><article class="stat-card"><div class="stat-icon <?= e($color) ?>"><i class="fa-solid <?= e($icon) ?>"></i></div><div><span><?= e($label) ?></span><strong><?= e($value) ?></strong><small>Data saat ini</small></div></article><?php endforeach; ?>
+</div><div class="dashboard-grid two"><section class="panel"><div class="panel-head"><h3>Statistik Pengguna</h3><span class="muted">Distribusi akun</span></div><canvas id="userChart" height="220"></canvas></section><section class="panel"><div class="panel-head"><h3>Aktivitas Terbaru</h3><a href="<?= e(url('users')) ?>">Kelola</a></div><?php foreach($recent as $r): ?><div class="activity-row"><span class="activity-icon"><i class="fa-solid fa-user"></i></span><div><b><?= e($r['name']) ?></b><small><?= ucfirst(e($r['role'])) ?> · <?= e(format_date($r['created_at'])) ?></small></div></div><?php endforeach; ?></section></div>
+<script>window.userChartData=<?= json_encode([$counts['siswa'],$counts['guru']]) ?>;</script>
+<?php require __DIR__.'/../_dashboard_end.php'; ?>

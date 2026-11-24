@@ -1,0 +1,1 @@
+</div><?php require __DIR__.'/../partials/footer.php'; ?></main></div><?php require __DIR__.'/../partials/scripts.php'; ?>

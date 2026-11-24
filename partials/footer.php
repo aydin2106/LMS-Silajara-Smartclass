@@ -1,0 +1,1 @@
+<footer class="footer">© <?= date('Y') ?> <?= e(SCHOOL_NAME) ?> · LMS PILAJARA</footer>

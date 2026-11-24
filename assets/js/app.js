@@ -1,0 +1,14 @@
+document.addEventListener('DOMContentLoaded',()=>{
+ const sidebar=document.getElementById('sidebar'),toggle=document.getElementById('menuToggle');
+ toggle?.addEventListener('click',()=>sidebar?.classList.toggle('open'));
+ document.addEventListener('click',e=>{if(window.innerWidth<900&&sidebar?.classList.contains('open')&&!sidebar.contains(e.target)&&!toggle?.contains(e.target))sidebar.classList.remove('open')});
+ const search=document.getElementById('tableSearch'),table=document.getElementById('dataTable');
+ search?.addEventListener('input',()=>{const q=search.value.toLowerCase();table?.querySelectorAll('tbody tr').forEach(tr=>tr.hidden=!tr.innerText.toLowerCase().includes(q))});
+ document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('.modal')?.classList.remove('show')));
+ const modal=document.getElementById('gradeModal'),form=document.getElementById('gradeForm');
+ document.querySelectorAll('.grade-btn').forEach(btn=>btn.addEventListener('click',()=>{form.elements.submission_id.value=btn.dataset.id;form.elements.score.value=btn.dataset.score;form.elements.feedback.value=btn.dataset.feedback;modal.classList.add('show')}));
+ form?.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(form);try{const r=await fetch(`${LMS.baseUrl}/index.php?page=api&action=grade`,{method:'POST',headers:{'X-CSRF-TOKEN':LMS.csrf},body:fd});const d=await r.json();alert(d.message);if(d.ok)location.reload()}catch{alert('Gagal menghubungi server')}});
+ document.querySelectorAll('.submit-task-form').forEach(f=>f.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(f);try{const r=await fetch(`${LMS.baseUrl}/index.php?page=api&action=submit-task`,{method:'POST',headers:{'X-CSRF-TOKEN':LMS.csrf},body:fd});const d=await r.json();alert(d.message);if(d.ok)location.reload()}catch{alert('Gagal menghubungi server')}}));
+ const attendance=document.getElementById('attendanceForm');attendance?.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(attendance);try{const r=await fetch(`${LMS.baseUrl}/index.php?page=api&action=attendance`,{method:'POST',headers:{'X-CSRF-TOKEN':LMS.csrf},body:fd});const d=await r.json();alert(d.message)}catch{alert('Gagal menghubungi server')}});
+ const canvas=document.getElementById('userChart');if(canvas&&window.userChartData&&window.Chart){new Chart(canvas,{type:'doughnut',data:{labels:['Siswa','Guru'],datasets:[{data:window.userChartData,backgroundColor:['#2563eb','#16a34a'],borderWidth:0}]},options:{plugins:{legend:{position:'bottom'}},cutout:'68%'}})}
+});
